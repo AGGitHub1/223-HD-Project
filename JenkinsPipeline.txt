@@ -1,0 +1,79 @@
+pipeline {
+    agent any
+
+    tools {
+        msbuild 'MSBuild_2022'
+        sonarQube 'SonarScanner_MSBuild'
+    }
+
+    environment {
+        SONARQUBE_SCANNER_HOME = tool 'SonarScanner_MSBuild'
+        SONARQUBE_SERVER = 'SonarQube'  // This should match the name you configured in the SonarQube server setup
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/your-username/your-repo-name.git'
+            }
+        }
+
+        stage('Begin SonarQube Analysis') {
+            steps {
+                script {
+                    bat "${env.SONARQUBE_SCANNER_HOME}/SonarScanner.MSBuild.exe begin /k:\"your-project-key\" /d:sonar.login=\"your-sonarqube-token\""
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    msbuild buildFile: 'YourSolution.sln', 
+                            cmdLineArgs: '/p:Configuration=Release', 
+                            buildTool: 'MSBuild_2022'
+                }
+            }
+        }
+
+        stage('End SonarQube Analysis') {
+            steps {
+                script {
+                    bat "${env.SONARQUBE_SCANNER_HOME}/SonarScanner.MSBuild.exe end /d:sonar.login=\"your-sonarqube-token\""
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    bat 'vstest.console.exe /path/to/your/test/assembly.dll'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    bat 'docker build -t your-image-name .'
+                    bat 'docker run -d -p 8080:80 your-image-name'
+                }
+            }
+        }
+
+        stage('Release') {
+            steps {
+                // Add release steps here, e.g., promoting the build to production
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
