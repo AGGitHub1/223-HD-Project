@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Enhanced Reaction Controller")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+670082f4333b10da8e24d9e7f7c2268cea3991ae")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+827797eb57df9e68da6a5492f8c1a11d6418a58f")]
 [assembly: System.Reflection.AssemblyProductAttribute("Enhanced Reaction Controller")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Enhanced Reaction Controller")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
