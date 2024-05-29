@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         msbuild 'MSBuild_2022'
-        sonar 'Sonar_MS' // Updated tool type for SonarQube
+        hudson.plugins.sonar.MsBuildSQRunnerInstallation 'Sonar_MS' 
         dockerTool 'Docker'
     }
 
