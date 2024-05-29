@@ -11,9 +11,9 @@ namespace SimpleReactionMachine
         private IGui _gui;
         private IRandom _random;
         private IState _currentState;
-        private int _ticksUntilStart;
-        private int _elapsedTime;
-        private int _displayTimeCounter;  // Manage display persistence after stopping
+        //private int _ticksUntilStart;
+        //private int _elapsedTime;
+        //private int _displayTimeCounter;  // Manage display persistence after stopping
         private int _gameCount = 0;
         private List<double> _gameTimes = new List<double>(); // Store the times for each game
 

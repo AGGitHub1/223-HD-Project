@@ -3,35 +3,42 @@ pipeline {
 
     tools {
         msbuild 'MSBuild_2022'
-        dockerTool 'Docker'     }
+        dockerTool 'Docker'
+    }
 
     environment {
         DOCKER_IMAGE = 'enhanced-reaction-controller:latest'
-        SONARQUBE_URL = 'http://localhost:9000' 
+        SONARQUBE_URL = 'http://localhost:9000'
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/AGGitHub1/223-HD-Project', branch: 'main'
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
-                    bat 'msbuild "Enhanced Reaction Controller/Enhanced Reaction Controller.csproj" /p:Configuration=Release'
+                    bat 'msbuild "Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj" /p:Configuration=Release'
                 }
             }
         }
 
-       stage('Test') {
+        stage('Test') {
             steps {
                 script {
-                    bat 'dotnet test "Enhanced Reaction Controller/Enhanced Reaction Controller.csproj" --logger:trx'
+                    bat 'dotnet test "Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj" --logger:trx'
                 }
             }
         }
 
-          stage('Code Quality Analysis') {
+        stage('Code Quality Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    bat "dotnet sonarscanner begin /k:'EnhancedReactionController' /d:sonar.host.url=${env.SONARQUBE_URL}"
-                    bat "msbuild 'Enhanced Reaction Controller/Enhanced Reaction Controller.csproj' /t:Rebuild"
+                    bat "dotnet sonarscanner begin /k:\"Enhanced-Reaction-Controller\" /d:sonar.host.url=${env.SONARQUBE_URL}"
+                    bat "msbuild \"Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj\" /t:Rebuild"
                     bat "dotnet sonarscanner end"
                 }
             }
@@ -44,11 +51,12 @@ pipeline {
                 }
             }
         }
+
         stage('Release') {
             steps {
                 script {
                     echo 'Simulating release stage - deploying to production environment...'
-                    docker.image(DOCKER_IMAGE).run('-d -p 8080:80 --name enhanced-reaction-controller-prod')
+                    docker.image(env.DOCKER_IMAGE).run('-d -p 8080:80 --name enhanced-reaction-controller-prod')
                 }
             }
         }
@@ -61,7 +69,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         always {
             cleanWs()
