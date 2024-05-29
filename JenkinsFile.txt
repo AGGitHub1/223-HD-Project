@@ -48,7 +48,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    docker.build('enhanced-reaction-controller').run('-d -p 8080:80')
+                    docker.build('enhanced-reaction-controller').run('-d -p 8081:80')
                 }
             }
         }
@@ -57,7 +57,7 @@ pipeline {
             steps {
                 script {
                     echo 'Simulating release stage - deploying to production environment...'
-                    docker.image(env.DOCKER_IMAGE).run('-d -p 8080:80 --name enhanced-reaction-controller-prod')
+                    docker.image(env.DOCKER_IMAGE).run('-d -p 8081:80 --name enhanced-reaction-controller-prod')
                 }
             }
         }
