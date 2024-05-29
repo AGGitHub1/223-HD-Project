@@ -3,12 +3,11 @@ pipeline {
 
     tools {
         msbuild 'MSBuild_2022'
-        dockerTool 'Docker' // Ensure this matches the name you gave in the Jenkins tool configuration
-    }
+        dockerTool 'Docker'     }
 
     environment {
         DOCKER_IMAGE = 'enhanced-reaction-controller:latest'
-        SONARQUBE_URL = 'http://localhost:8080' // Replace with your actual SonarQube server URL
+        SONARQUBE_URL = 'http://localhost:8080' 
     }
 
     stages {
@@ -20,21 +19,21 @@ pipeline {
             }
         }
 
-        stage('Test') {
+       stage('Test') {
             steps {
                 script {
-                    bat 'vstest.console.exe "Enhanced Reaction Controller/bin/Release/net5.0/Enhanced Reaction Controller.dll"'
+                    bat 'dotnet test "Enhanced Reaction Controller/Enhanced Reaction Controller.csproj" --logger:trx'
                 }
             }
         }
 
-        stage('Code Quality Analysis') {
+         stage('Code Quality Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
-                        bat 'dotnet sonarscanner begin /k:"EnhancedReactionController" /d:sonar.host.url=$SONARQUBE_URL /d:sonar.login=$SONAR_AUTH_TOKEN'
+                    script {
+                        bat 'dotnet sonarscanner begin /k:"EnhancedReactionController" /d:sonar.host.url=%SONARQUBE_URL%'
                         bat 'msbuild "Enhanced Reaction Controller/Enhanced Reaction Controller.csproj" /p:Configuration=Release'
-                        bat 'dotnet sonarscanner end /d:sonar.login=$SONAR_AUTH_TOKEN'
+                        bat 'dotnet sonarscanner end'
                     }
                 }
             }
