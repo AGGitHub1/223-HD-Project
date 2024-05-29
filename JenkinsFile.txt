@@ -3,43 +3,19 @@ pipeline {
 
     tools {
         msbuild 'MSBuild_2022'
-        sonarQube 'SonarScanner_MSBuild'
+        sonarQubeScanner 'Sonar_MS'
+        dockerTool 'Docker'
     }
 
     environment {
-        SONARQUBE_SCANNER_HOME = tool 'SonarScanner_MSBuild'
-        SONARQUBE_SERVER = 'SonarQube'  // This should match the name you configured in the SonarQube server setup
+        DOCKER_IMAGE = 'enhanced-reaction-controller:latest'
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/your-username/your-repo-name.git'
-            }
-        }
-
-        stage('Begin SonarQube Analysis') {
-            steps {
-                script {
-                    bat "${env.SONARQUBE_SCANNER_HOME}/SonarScanner.MSBuild.exe begin /k:\"your-project-key\" /d:sonar.login=\"your-sonarqube-token\""
-                }
-            }
-        }
-
         stage('Build') {
             steps {
                 script {
-                    msbuild buildFile: 'YourSolution.sln', 
-                            cmdLineArgs: '/p:Configuration=Release', 
-                            buildTool: 'MSBuild_2022'
-                }
-            }
-        }
-
-        stage('End SonarQube Analysis') {
-            steps {
-                script {
-                    bat "${env.SONARQUBE_SCANNER_HOME}/SonarScanner.MSBuild.exe end /d:sonar.login=\"your-sonarqube-token\""
+                    bat 'msbuild "Enhanced Reaction Controller/Enhanced Reaction Controller.csproj" /p:Configuration=Release'
                 }
             }
         }
@@ -47,7 +23,17 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    bat 'vstest.console.exe /path/to/your/test/assembly.dll'
+                    bat 'vstest.console.exe "Enhanced Reaction Controller/bin/Release/net5.0/Enhanced Reaction Controller.dll"'
+                }
+            }
+        }
+
+        stage('Code Quality Analysis') {
+            steps {
+                withSonarQubeEnv('Sonar_MS') {
+                    bat 'SonarScanner.MSBuild.exe begin /k:"EnhancedReactionController" /d:sonar.host.url="$SONAR_HOST_URL" /d:sonar.login="$SONAR_AUTH_TOKEN"'
+                    bat 'msbuild "Enhanced Reaction Controller/Enhanced Reaction Controller.csproj" /p:Configuration=Release'
+                    bat 'SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_AUTH_TOKEN"'
                 }
             }
         }
@@ -55,25 +41,36 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    bat 'docker build -t your-image-name .'
-                    bat 'docker run -d -p 8080:80 your-image-name'
+                    docker.build(DOCKER_IMAGE)
+                    docker.image(DOCKER_IMAGE).run('-d -p 8080:80')
                 }
             }
         }
 
         stage('Release') {
             steps {
-                // Add release steps here, e.g., promoting the build to production
+                script {
+                    echo 'Simulating release stage - deploying to production environment...'
+                    // Example of a production deployment step
+                    docker.image(DOCKER_IMAGE).run('-d -p 8080:80 --name enhanced-reaction-controller-prod')
+                }
+            }
+        }
+
+        stage('Monitoring and Alerting') {
+            steps {
+                script {
+                    echo 'Simulating monitoring and alerting setup...'
+                    // Placeholder for monitoring and alerting setup
+                    // You can integrate with tools like Datadog, New Relic, etc.
+                }
             }
         }
     }
-
+    
     post {
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
+        always {
+            cleanWs()
         }
     }
 }
