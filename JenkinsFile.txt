@@ -47,10 +47,10 @@ pipeline {
             }
         }
        
-        stage('Deploy') {
+       stage('Deploy') {
             steps {
                 script {
-                    docker.build('enhanced-reaction-controller').run('-d -p 8081:80')
+                    docker.build('enhanced-reaction-controller').run('-d -p 81:80')
                 }
             }
         }
@@ -59,7 +59,9 @@ pipeline {
             steps {
                 script {
                     echo 'Simulating release stage - deploying to production environment...'
-                    docker.image(env.DOCKER_IMAGE).run('-d -p 8081:80 --name enhanced-reaction-controller-prod')
+                    bat 'docker stop enhanced-reaction-controller-prod || true'
+                    bat 'docker rm enhanced-reaction-controller-prod || true'
+                    bat 'docker run -d -p 81:80 --name enhanced-reaction-controller-prod enhanced-reaction-controller:latest'
                 }
             }
         }
@@ -68,8 +70,7 @@ pipeline {
             steps {
                 script {
                     echo 'Setting up monitoring and alerting...'
-                    // Prometheus and Grafana setup can be complex and might need additional scripts or configurations
-                    // This example assumes that Prometheus and Grafana are already set up and running
+                 
                     echo 'Metrics are being collected by Prometheus at ${env.PROMETHEUS_URL}'
                 }
             }
