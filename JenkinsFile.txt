@@ -3,8 +3,8 @@ pipeline {
 
     tools {
         msbuild 'MSBuild_2022'
-        hudson.plugins.sonar.SonarRunnerInstallation 
-        dockerTool 'Docker'
+        SonnarQubeScanner 5.0.1.3006
+        Docker latest
     }
 
     environment {
