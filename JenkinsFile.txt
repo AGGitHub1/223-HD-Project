@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'enhanced-reaction-controller:latest'
-        SONARQUBE_URL = 'http://localhost:8080' 
+        SONARQUBE_URL = 'http://localhost:9000' 
     }
 
     stages {
@@ -27,14 +27,12 @@ pipeline {
             }
         }
 
-         stage('Code Quality Analysis') {
+          stage('Code Quality Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    script {
-                        bat 'dotnet sonarscanner begin /k:"EnhancedReactionController" /d:sonar.host.url=%SONARQUBE_URL%'
-                        bat 'msbuild "Enhanced Reaction Controller/Enhanced Reaction Controller.csproj" /p:Configuration=Release'
-                        bat 'dotnet sonarscanner end'
-                    }
+                    bat "dotnet sonarscanner begin /k:'EnhancedReactionController' /d:sonar.host.url=${env.SONARQUBE_URL}"
+                    bat "msbuild 'Enhanced Reaction Controller/Enhanced Reaction Controller.csproj' /t:Rebuild"
+                    bat "dotnet sonarscanner end"
                 }
             }
         }
@@ -42,12 +40,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    docker.build(DOCKER_IMAGE)
-                    docker.image(DOCKER_IMAGE).run('-d -p 8080:80')
+                    docker.build('enhanced-reaction-controller').run('-d -p 8080:80')
                 }
             }
         }
-
         stage('Release') {
             steps {
                 script {
