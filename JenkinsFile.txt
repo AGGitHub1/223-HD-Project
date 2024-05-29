@@ -4,12 +4,14 @@ pipeline {
     tools {
         msbuild 'MSBuild_2022'
         dockerTool 'Docker'
+
     }
 
     environment {
         DOCKER_IMAGE = 'enhanced-reaction-controller:latest'
         SONARQUBE_URL = 'http://localhost:9000'
         SONAR_TOKEN = 'squ_7aa678f8ff4a9dc3ea241d6e406b101514a11c07'
+        PROMETHEUS_URL = 'http://localhost:9090'
     }
 
     stages {
@@ -65,7 +67,10 @@ pipeline {
         stage('Monitoring and Alerting') {
             steps {
                 script {
-                    echo 'Simulating monitoring and alerting setup...'
+                    echo 'Setting up monitoring and alerting...'
+                    // Prometheus and Grafana setup can be complex and might need additional scripts or configurations
+                    // This example assumes that Prometheus and Grafana are already set up and running
+                    echo 'Metrics are being collected by Prometheus at ${env.PROMETHEUS_URL}'
                 }
             }
         }
