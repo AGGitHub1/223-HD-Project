@@ -3,12 +3,14 @@ pipeline {
 
     tools {
         msbuild 'MSBuild_2022'
-        SonnarQubeScanner 5.0.
-        Docker latest
+        dockerTool 'Docker'
+        // Remove this line if you don't need to specify SonarQubeScanner here
     }
 
     environment {
         DOCKER_IMAGE = 'enhanced-reaction-controller:latest'
+        SONARQUBE_URL = 'http://your-sonarqube-server' // Update with your SonarQube server URL
+        SONARQUBE_LOGIN = credentials('sonar-token') // Update with your SonarQube token credentials ID
     }
 
     stages {
@@ -30,10 +32,10 @@ pipeline {
 
         stage('Code Quality Analysis') {
             steps {
-                withSonarQubeEnv('Sonar_MS') {
-                    bat 'SonarScanner.MSBuild.exe begin /k:"EnhancedReactionController" /d:sonar.host.url="$SONAR_HOST_URL" /d:sonar.login="$SONAR_AUTH_TOKEN"'
+                withSonarQubeEnv('SonarQube') {
+                    bat 'dotnet sonarscanner begin /k:"EnhancedReactionController" /d:sonar.host.url=$SONARQUBE_URL /d:sonar.login=$SONARQUBE_LOGIN'
                     bat 'msbuild "Enhanced Reaction Controller/Enhanced Reaction Controller.csproj" /p:Configuration=Release'
-                    bat 'SonarScanner.MSBuild.exe end /d:sonar.login="$SONAR_AUTH_TOKEN"'
+                    bat 'dotnet sonarscanner end /d:sonar.login=$SONARQUBE_LOGIN'
                 }
             }
         }
@@ -51,7 +53,6 @@ pipeline {
             steps {
                 script {
                     echo 'Simulating release stage - deploying to production environment...'
-                    // Example of a production deployment step
                     docker.image(DOCKER_IMAGE).run('-d -p 8080:80 --name enhanced-reaction-controller-prod')
                 }
             }
@@ -61,8 +62,6 @@ pipeline {
             steps {
                 script {
                     echo 'Simulating monitoring and alerting setup...'
-                    // Placeholder for monitoring and alerting setup
-                    // You can integrate with tools like Datadog, New Relic, etc.
                 }
             }
         }
