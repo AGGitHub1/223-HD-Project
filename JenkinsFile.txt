@@ -4,13 +4,11 @@ pipeline {
     tools {
         msbuild 'MSBuild_2022'
         dockerTool 'Docker'
-        // Remove this line if you don't need to specify SonarQubeScanner here
     }
 
     environment {
         DOCKER_IMAGE = 'enhanced-reaction-controller:latest'
-        SONARQUBE_URL = 'http://your-sonarqube-server' // Update with your SonarQube server URL
-        SONARQUBE_LOGIN = credentials('sonar-token') // Update with your SonarQube token credentials ID
+        SONARQUBE_URL = 'http://localhost:8080' // Replace with your actual SonarQube server URL
     }
 
     stages {
@@ -33,9 +31,11 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    bat 'dotnet sonarscanner begin /k:"EnhancedReactionController" /d:sonar.host.url=$SONARQUBE_URL /d:sonar.login=$SONARQUBE_LOGIN'
-                    bat 'msbuild "Enhanced Reaction Controller/Enhanced Reaction Controller.csproj" /p:Configuration=Release'
-                    bat 'dotnet sonarscanner end /d:sonar.login=$SONARQUBE_LOGIN'
+                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
+                        bat 'dotnet sonarscanner begin /k:"EnhancedReactionController" /d:sonar.host.url=$SONARQUBE_URL /d:sonar.login=$SONAR_AUTH_TOKEN'
+                        bat 'msbuild "Enhanced Reaction Controller/Enhanced Reaction Controller.csproj" /p:Configuration=Release'
+                        bat 'dotnet sonarscanner end /d:sonar.login=$SONAR_AUTH_TOKEN'
+                    }
                 }
             }
         }
@@ -69,7 +69,9 @@ pipeline {
     
     post {
         always {
-            cleanWs()
+            node {
+                cleanWs()
+            }
         }
     }
 }
