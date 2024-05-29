@@ -9,6 +9,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'enhanced-reaction-controller:latest'
         SONARQUBE_URL = 'http://localhost:9000'
+        SONAR_TOKEN = 'squ_7aa678f8ff4a9dc3ea241d6e406b101514a11c07'
     }
 
     stages {
@@ -37,9 +38,9 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    bat "dotnet sonarscanner begin /k:\"Enhanced-Reaction-Controller\" /d:sonar.host.url=${env.SONARQUBE_URL}"
+                    bat "dotnet sonarscanner begin /k:\"Enhanced-Reaction-Controller\" /d:sonar.host.url=${env.SONARQUBE_URL} /d:sonar.login=${env.SONAR_TOKEN}"
                     bat "msbuild \"Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj\" /t:Rebuild"
-                    bat "dotnet sonarscanner end"
+                    bat "dotnet sonarscanner end /d:sonar.login=${env.SONAR_TOKEN}"
                 }
             }
         }
