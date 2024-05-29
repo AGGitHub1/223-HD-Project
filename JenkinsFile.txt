@@ -44,7 +44,13 @@ pipeline {
                 }
             }
         }
-
+       stage('Verify Dockerfile') {
+            steps {
+                script {
+                    bat 'dir'
+                }
+            }
+        }
         stage('Deploy') {
             steps {
                 script {
