@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
@@ -22,9 +23,24 @@ namespace SimpleReactionMachine
         static private IController controller = null!;
         static private IGui gui = null!;
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern IntPtr GetStdHandle(int nStdHandle);
+
+        const int STD_OUTPUT_HANDLE = -11;
+
+        static bool IsConsoleAvailable()
+        {
+            IntPtr handle = GetStdHandle(STD_OUTPUT_HANDLE);
+            return GetConsoleMode(handle, out _);
+        }
+
         static void Main(string[] args)
         {
-            try
+            if (IsConsoleAvailable())
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("{0}{1}{2}", TOP_LEFT_JOINT, new string(HORIZONTAL_LINE, 50), TOP_RIGHT_JOINT);
@@ -47,10 +63,9 @@ namespace SimpleReactionMachine
                 SafeSetCursorPosition(5, 8);
                 Console.Write("{0,-20}", "- For Exit press ESC");
             }
-            catch (IOException ex)
+            else
             {
                 Console.WriteLine("Console operations are not supported in this environment.");
-                Console.WriteLine($"Exception: {ex.Message}");
             }
 
             // Create a time for Tick event
@@ -74,7 +89,7 @@ namespace SimpleReactionMachine
             bool quitPressed = false;
             while (!quitPressed)
             {
-                try
+                if (IsConsoleAvailable())
                 {
                     ConsoleKeyInfo key = Console.ReadKey(true);
                     switch (key.Key)
@@ -90,17 +105,11 @@ namespace SimpleReactionMachine
                             break;
                     }
                 }
-                catch (InvalidOperationException)
-                {
-                    // Handle case where Console.ReadKey is not supported
-                    Console.WriteLine("Key press operations are not supported in this environment.");
-                    break;
-                }
             }
         }
 
         // This event occurs every 10 msec
-        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        private static void OnTimedEvent(object? source, ElapsedEventArgs e)
         {
             controller.Tick();
         }
@@ -137,7 +146,7 @@ namespace SimpleReactionMachine
 
             private void PrintUserInterface(string text)
             {
-                try
+                if (IsConsoleAvailable())
                 {
                     Console.ForegroundColor = ConsoleColor.Blue;
                     SafeSetCursorPosition(15, 2);
@@ -145,10 +154,8 @@ namespace SimpleReactionMachine
                     SafeSetCursorPosition(15, 2);
                     Console.Write("{0,-20}", text);
                 }
-                catch (IOException ex)
+                else
                 {
-                    Console.WriteLine("Cursor positioning not supported.");
-                    Console.WriteLine($"Exception: {ex.Message}");
                     Console.WriteLine(text);
                 }
             }
@@ -158,7 +165,10 @@ namespace SimpleReactionMachine
         {
             try
             {
-                Console.SetCursorPosition(left, top);
+                if (IsConsoleAvailable())
+                {
+                    Console.SetCursorPosition(left, top);
+                }
             }
             catch (IOException)
             {
