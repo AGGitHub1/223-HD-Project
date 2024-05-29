@@ -1,0 +1,15 @@
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\bin\Debug\net8.0\Enhanced Reaction Controller.exe
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\bin\Debug\net8.0\Enhanced Reaction Controller.deps.json
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\bin\Debug\net8.0\Enhanced Reaction Controller.runtimeconfig.json
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\bin\Debug\net8.0\Enhanced Reaction Controller.dll
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\bin\Debug\net8.0\Enhanced Reaction Controller.pdb
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\obj\Debug\net8.0\Enhanced Reaction Controller.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\obj\Debug\net8.0\Enhanced Reaction Controller.AssemblyInfoInputs.cache
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\obj\Debug\net8.0\Enhanced Reaction Controller.AssemblyInfo.cs
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\obj\Debug\net8.0\Enhanced Reaction Controller.csproj.CoreCompileInputs.cache
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\obj\Debug\net8.0\Enhanced Reaction Controller.sourcelink.json
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\obj\Debug\net8.0\Enhanced Reaction Controller.dll
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\obj\Debug\net8.0\refint\Enhanced Reaction Controller.dll
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\obj\Debug\net8.0\Enhanced Reaction Controller.pdb
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\obj\Debug\net8.0\Enhanced Reaction Controller.genruntimeconfig.cache
+C:\Users\genov\source\repos\223-HD-Project\Enhanced Reaction Controller\obj\Debug\net8.0\ref\Enhanced Reaction Controller.dll

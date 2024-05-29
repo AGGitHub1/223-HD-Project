@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\genov\\source\\repos\\Enhanced Reaction Controller\\Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj": {}
+    "C:\\Users\\genov\\source\\repos\\223-HD-Project\\Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj": {}
   },
   "projects": {
-    "C:\\Users\\genov\\source\\repos\\Enhanced Reaction Controller\\Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj": {
+    "C:\\Users\\genov\\source\\repos\\223-HD-Project\\Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\genov\\source\\repos\\Enhanced Reaction Controller\\Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj",
+        "projectUniqueName": "C:\\Users\\genov\\source\\repos\\223-HD-Project\\Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj",
         "projectName": "Enhanced Reaction Controller",
-        "projectPath": "C:\\Users\\genov\\source\\repos\\Enhanced Reaction Controller\\Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj",
+        "projectPath": "C:\\Users\\genov\\source\\repos\\223-HD-Project\\Enhanced Reaction Controller\\Enhanced Reaction Controller.csproj",
         "packagesPath": "C:\\Users\\genov\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\genov\\source\\repos\\Enhanced Reaction Controller\\Enhanced Reaction Controller\\obj\\",
+        "outputPath": "C:\\Users\\genov\\source\\repos\\223-HD-Project\\Enhanced Reaction Controller\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\genov\\AppData\\Roaming\\NuGet\\NuGet.Config",
