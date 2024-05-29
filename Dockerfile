@@ -1,20 +1,24 @@
-# Use the official .NET image from the Microsoft Container Registry
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
-WORKDIR /app
-EXPOSE 80
+# Use the official Microsoft .NET SDK image (version 8.0)
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+# Set the working directory inside the container
 WORKDIR /src
+
+# Copy the solution file and restore the dependencies
 COPY ["Enhanced Reaction Controller/Enhanced Reaction Controller.csproj", "Enhanced Reaction Controller/"]
 RUN dotnet restore "Enhanced Reaction Controller/Enhanced Reaction Controller.csproj"
+
+# Copy the rest of the files and build the application
 COPY . .
 WORKDIR "/src/Enhanced Reaction Controller"
 RUN dotnet build "Enhanced Reaction Controller.csproj" -c Release -o /app/build
 
+# Publish the application
 FROM build AS publish
 RUN dotnet publish "Enhanced Reaction Controller.csproj" -c Release -o /app/publish
 
-FROM base AS final
+# Use the official Microsoft ASP.NET runtime image (version 8.0)
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Enhanced Reaction Controller.dll"]
