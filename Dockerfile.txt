@@ -1,4 +1,4 @@
-# Use the official Microsoft .NET image
+# Use the official Microsoft .NET SDK image (version 8.0)
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Set the working directory inside the container
@@ -17,8 +17,8 @@ RUN dotnet build "Enhanced Reaction Controller.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "Enhanced Reaction Controller.csproj" -c Release -o /app/publish
 
-# Use the official Microsoft .NET runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS final
+# Use the official Microsoft ASP.NET runtime image (version 8.0)
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Enhanced Reaction Controller.dll"]
